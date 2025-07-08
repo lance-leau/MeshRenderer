@@ -1,0 +1,38 @@
+#pragma once
+#include <array>
+#include <string>
+#include <vector>
+
+#include "mesh.hh"
+#include "projector.hh"
+#include "renderer.hh"
+#include "vertex.hh"
+
+namespace Renderer
+{
+    class Model
+    {
+    private:
+        int _x;
+        int _y;
+        int _z;
+
+        std::vector<Vertex*> _vertices;
+        std::vector<Mesh> _meshes;
+
+    public:
+        Model(int x, int y, int z);
+        ~Model();
+
+        void addVertex(Vertex* v);
+        void addMesh(const Mesh& m);
+
+        void draw(SDL_Renderer* renderer, Projector& projector);
+
+        std::vector<Vertex*>& getVertices();
+        std::vector<Mesh>& getMeshes();
+
+        void setPosition(int x, int y, int z);
+        std::tuple<int, int, int> getPosition();
+    };
+} // namespace Renderer
