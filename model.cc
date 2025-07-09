@@ -24,30 +24,42 @@ namespace Renderer
         std::vector<ProjectedPoint> projected;
         projected.reserve(_vertices.size());
 
+        std::vector<Vertex*> rotated;
+        projected.reserve(_vertices.size());
+
+        // FIXME rotate vertex
+
         for (Vertex* v : _vertices)
         {
-            Vertex worldV(v->getX() + _x, v->getY() + _y, v->getZ() + _z);
+            Vertex worldV(v->getX(), v->getY(), v->getZ());
+            worldV.rotate(this->getPitch(), this->getYaw());
+
+            worldV.setX(worldV.getX() + _x);
+            worldV.setY(worldV.getY() + _y);
+            worldV.setZ(worldV.getZ() + _z);
+
             projected.push_back(projector.projectPoint(worldV));
+            rotated.push_back(&worldV);
         }
         std::vector<Mesh> sortedMeshes = _meshes;
 
         std::sort(sortedMeshes.begin(), sortedMeshes.end(),
                   [&](Mesh& a, Mesh& b) {
-                      float za = (_vertices[a.getVertices()[0]]->getZ()
-                                  + _vertices[a.getVertices()[1]]->getZ()
-                                  + _vertices[a.getVertices()[2]]->getZ())
+                      float za = (rotated[a.getVertices()[0]]->getZ()
+                                  + rotated[a.getVertices()[1]]->getZ()
+                                  + rotated[a.getVertices()[2]]->getZ())
                           / 3.0f;
 
-                      float zb = (_vertices[b.getVertices()[0]]->getZ()
-                                  + _vertices[b.getVertices()[1]]->getZ()
-                                  + _vertices[b.getVertices()[2]]->getZ())
+                      float zb = (rotated[b.getVertices()[0]]->getZ()
+                                  + rotated[b.getVertices()[1]]->getZ()
+                                  + rotated[b.getVertices()[2]]->getZ())
                           / 3.0f;
 
                       return za > zb; // back to front (higher Z is farther)
                   });
 
         for (auto& mesh : sortedMeshes)
-            drawMesh(mesh, projected, renderer);
+            drawMesh(mesh, projected, renderer, _vertices);
     }
 
     std::vector<Vertex*>& Model::getVertices()
@@ -80,6 +92,26 @@ namespace Renderer
     void Model::addMesh(const Mesh& m)
     {
         _meshes.push_back(m);
+    }
+
+    float Model::getPitch()
+    {
+        return _pitch;
+    }
+
+    float Model::getYaw()
+    {
+        return _yaw;
+    }
+
+    void Model::setPitch(float p)
+    {
+        _pitch = p;
+    }
+
+    void Model::setYaw(float y)
+    {
+        _yaw = y;
     }
 
 } // namespace Renderer

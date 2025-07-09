@@ -17,12 +17,21 @@ namespace Renderer
         int _y;
         int _z;
 
+        float _pitch;
+        float _yaw;
+
         std::vector<Vertex*> _vertices;
         std::vector<Mesh> _meshes;
 
     public:
         Model(int x, int y, int z);
         ~Model();
+
+        float getPitch();
+        float getYaw();
+
+        void setPitch(float p);
+        void setYaw(float y);
 
         void addVertex(Vertex* v);
         void addMesh(const Mesh& m);

@@ -23,6 +23,8 @@ namespace Renderer
         void setY(long y);
         void setZ(long z);
 
+        void rotate(float pitch, float yaw);
+
         void print();
     };
 } // namespace Renderer

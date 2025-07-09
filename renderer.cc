@@ -54,16 +54,25 @@ namespace Renderer
     }
 
     void drawMesh(Mesh& mesh, std::vector<ProjectedPoint>& projected,
-                  SDL_Renderer* renderer)
+                  SDL_Renderer* renderer,
+                  std::vector<Renderer::Vertex*>& vertices)
     {
         auto indices = mesh.getVertices();
         ProjectedPoint& A = projected[indices[0]];
         ProjectedPoint& B = projected[indices[1]];
         ProjectedPoint& C = projected[indices[2]];
 
+        float distToCamera =
+            (vertices[indices[0]]->getZ() + vertices[indices[1]]->getZ()
+             + vertices[indices[2]]->getZ())
+            / 180.0f;
+        if (distToCamera < 0)
+            distToCamera *= -1;
+
         auto& color = mesh.getColor();
-        SDL_SetRenderDrawColor(renderer, color[0], color[1], color[2],
-                               color[3]);
+        SDL_SetRenderDrawColor(renderer, color[0] * distToCamera,
+                               color[1] * distToCamera, color[2] * distToCamera,
+                               255);
 
         // FIXME this is horrible, there is one bounding box and iteration for
         // every mesh !!! optimize by only placin each pixel once per freame

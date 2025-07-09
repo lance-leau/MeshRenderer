@@ -81,11 +81,21 @@ int main()
     bool running = true;
     SDL_Event event;
 
+    float yaw = 0.0f;
+
     while (running)
     {
         while (SDL_PollEvent(&event))
+        {
             if (event.type == SDL_QUIT)
                 running = false;
+            const Uint8* keystates = SDL_GetKeyboardState(NULL);
+            if (keystates[SDL_SCANCODE_RIGHT])
+            {
+                yaw += 0.1f;
+                model.setYaw(yaw);
+            }
+        }
 
         SDL_SetRenderDrawColor(renderer, 91, 183, 238,
                                255); // light blue background

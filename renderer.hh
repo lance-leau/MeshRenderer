@@ -12,6 +12,7 @@ namespace Renderer
                        SDL_Renderer* renderer);
 
     void drawMesh(Mesh& mesh, std::vector<ProjectedPoint>& projected,
-                  SDL_Renderer* renderer);
+                  SDL_Renderer* renderer,
+                  std::vector<Renderer::Vertex*>& vertices);
 
 } // namespace Renderer
