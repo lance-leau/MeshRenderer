@@ -11,7 +11,9 @@ namespace Renderer
         : _x(x)
         , _y(y)
         , _z(z)
-    {}
+    {
+        _isWireframe = false;
+    }
 
     Model::~Model()
     {
@@ -58,15 +60,16 @@ namespace Renderer
 
                       return za > zb;
                   });
-
-        Mesh::closest = Mesh::buffed_closest;
-        Mesh::furthest = Mesh::buffed_furthest;
-
-        Mesh::buffed_closest = 10000;
-        Mesh::buffed_furthest = 0;
-
-        for (auto& mesh : sortedMeshes)
-            drawMesh(mesh, projected, renderer);
+        if (_isWireframe)
+        {
+            for (auto& mesh : sortedMeshes)
+                drawWireframe(mesh, projected, renderer);
+        }
+        else
+        {
+            for (auto& mesh : sortedMeshes)
+                drawMesh(mesh, projected, renderer, rotated);
+        }
     }
 
     std::vector<Vertex*>& Model::getVertices()

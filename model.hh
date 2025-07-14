@@ -43,5 +43,7 @@ namespace Renderer
 
         void setPosition(int x, int y, int z);
         std::tuple<int, int, int> getPosition();
+
+        bool _isWireframe;
     };
 } // namespace Renderer

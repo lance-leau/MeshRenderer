@@ -84,34 +84,77 @@ int main()
     float yaw = 0.0f;
     float pitch = 0.0f;
 
+    bool pitchUp, pitchDown, yawRight, yawLeft;
+
     while (running)
     {
         while (SDL_PollEvent(&event))
         {
-            if (event.type == SDL_QUIT)
+            switch (event.type)
+            {
+            case SDL_QUIT:
                 running = false;
-            const Uint8* keystates = SDL_GetKeyboardState(NULL);
-            if (keystates[SDL_SCANCODE_RIGHT])
-            {
-                yaw -= 0.1f;
-                model.setYaw(yaw);
-            }
-            if (keystates[SDL_SCANCODE_LEFT])
-            {
-                yaw += 0.1f;
-                model.setYaw(yaw);
-            }
-            if (keystates[SDL_SCANCODE_UP])
-            {
-                pitch -= 0.1f;
-                model.setPitch(pitch);
-            }
-            if (keystates[SDL_SCANCODE_DOWN])
-            {
-                pitch += 0.1f;
-                model.setPitch(pitch);
+                break;
+
+            case SDL_KEYDOWN:
+                if (event.key.repeat == 0)
+                {
+                    switch (event.key.keysym.scancode)
+                    {
+                    case SDL_SCANCODE_RIGHT:
+                        yawRight = true;
+                        break;
+                    case SDL_SCANCODE_LEFT:
+                        yawLeft = true;
+                        break;
+                    case SDL_SCANCODE_UP:
+                        pitchUp = true;
+                        break;
+                    case SDL_SCANCODE_DOWN:
+                        pitchDown = true;
+                        break;
+                    case SDL_SCANCODE_SPACE:
+                        model._isWireframe = !model._isWireframe;
+                        break;
+                    default:
+                        break;
+                    }
+                }
+                break;
+            case SDL_KEYUP:
+                if (event.key.repeat == 0)
+                {
+                    switch (event.key.keysym.scancode)
+                    {
+                    case SDL_SCANCODE_RIGHT:
+                        yawRight = false;
+                        break;
+                    case SDL_SCANCODE_LEFT:
+                        yawLeft = false;
+                        break;
+                    case SDL_SCANCODE_UP:
+                        pitchUp = false;
+                        break;
+                    case SDL_SCANCODE_DOWN:
+                        pitchDown = false;
+                        break;
+                    default:
+                        break;
+                    }
+                }
+                break;
             }
         }
+        if (yawLeft)
+            yaw += 0.1f;
+        if (yawRight)
+            yaw -= 0.1f;
+        if (pitchUp)
+            pitch -= 0.1f;
+        if (pitchDown)
+            pitch += 0.1f;
+        model.setYaw(yaw);
+        model.setPitch(pitch);
 
         SDL_SetRenderDrawColor(renderer, 91, 183, 238,
                                255); // light blue background

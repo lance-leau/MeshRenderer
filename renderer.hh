@@ -13,6 +13,6 @@ namespace Renderer
                        SDL_Renderer* renderer);
 
     void drawMesh(Mesh& mesh, std::vector<ProjectedPoint>& projected,
-                  SDL_Renderer* renderer);
+                  SDL_Renderer* renderer, std::vector<Vertex>& rotatedWorld);
 
 } // namespace Renderer
