@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "mesh.hh"
+#include "model.hh"
 #include "projector.hh"
 
 namespace Renderer
@@ -12,7 +13,6 @@ namespace Renderer
                        SDL_Renderer* renderer);
 
     void drawMesh(Mesh& mesh, std::vector<ProjectedPoint>& projected,
-                  SDL_Renderer* renderer,
-                  std::vector<Renderer::Vertex*>& vertices);
+                  SDL_Renderer* renderer);
 
 } // namespace Renderer

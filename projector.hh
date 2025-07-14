@@ -11,9 +11,11 @@ namespace Renderer
     public:
         int _x;
         int _y;
-        ProjectedPoint(int x, int y)
+        int _z;
+        ProjectedPoint(int x, int y, int z)
             : _x(x)
-            , _y(y){};
+            , _y(y)
+            , _z(z){};
     };
 
     class Projector
@@ -24,7 +26,7 @@ namespace Renderer
 
     public:
         Projector(float focalLen = 300.0f,
-                  ProjectedPoint offset = ProjectedPoint(0.0f, 0.0f));
+                  ProjectedPoint offset = ProjectedPoint(0.0f, 0.0f, 0.0f));
 
         void setFocalLen(float newFocal);
         float getFocalLen();

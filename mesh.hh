@@ -24,6 +24,12 @@ namespace Renderer
         void setColor(unsigned char r, unsigned char g, unsigned char b,
                       unsigned char a);
         void print(std::vector<Vertex*>& vertices);
+
+        static float furthest;
+        static float closest;
+
+        static float buffed_furthest;
+        static float buffed_closest;
     };
 
 } // namespace Renderer

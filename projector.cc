@@ -28,7 +28,7 @@ namespace Renderer
         float xProj = (_focalLen * x) / denom + _offset._x;
         float yProj = (_focalLen * y) / denom + _offset._y;
 
-        return ProjectedPoint(xProj, yProj);
+        return ProjectedPoint(xProj, yProj, denom);
     }
 
     std::vector<ProjectedPoint>

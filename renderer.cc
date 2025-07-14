@@ -5,6 +5,10 @@
 
 namespace Renderer
 {
+    float Mesh::closest = 100000;
+    float Mesh::furthest = 0;
+    float Mesh::buffed_closest = 100000;
+    float Mesh::buffed_furthest = 0;
 
     void drawWireframe(Mesh& mesh, std::vector<ProjectedPoint>& projected,
                        SDL_Renderer* renderer)
@@ -54,25 +58,34 @@ namespace Renderer
     }
 
     void drawMesh(Mesh& mesh, std::vector<ProjectedPoint>& projected,
-                  SDL_Renderer* renderer,
-                  std::vector<Renderer::Vertex*>& vertices)
+                  SDL_Renderer* renderer)
     {
         auto indices = mesh.getVertices();
         ProjectedPoint& A = projected[indices[0]];
         ProjectedPoint& B = projected[indices[1]];
         ProjectedPoint& C = projected[indices[2]];
 
-        float distToCamera =
-            (vertices[indices[0]]->getZ() + vertices[indices[1]]->getZ()
-             + vertices[indices[2]]->getZ())
-            / 180.0f;
-        if (distToCamera < 0)
-            distToCamera *= -1;
+        float dist = (float)A._z;
 
-        auto& color = mesh.getColor();
-        SDL_SetRenderDrawColor(renderer, color[0] * distToCamera,
-                               color[1] * distToCamera, color[2] * distToCamera,
-                               255);
+        if (dist < 0)
+            dist *= -1;
+
+        if (dist < mesh.buffed_closest)
+            mesh.buffed_closest = dist;
+        if (dist > mesh.buffed_furthest)
+            mesh.buffed_furthest = dist;
+
+        // std::cout << dist << " : " << mesh.closest << " : "
+        //           << (-dist + mesh.furthest) / (mesh.furthest - mesh.closest)
+        //           << '\n';
+
+        float max = mesh.furthest * 1.1f;
+        float min = mesh.closest * 0.8f;
+
+        Uint8 r = mesh.getColor()[0] * ((-dist + max) / (max - min));
+        Uint8 g = mesh.getColor()[1] * (-dist + max) / (max - min);
+        Uint8 b = mesh.getColor()[2] * (-dist + max) / (max - min);
+        SDL_SetRenderDrawColor(renderer, r, g, b, 255);
 
         // FIXME this is horrible, there is one bounding box and iteration for
         // every mesh !!! optimize by only placin each pixel once per freame

@@ -24,10 +24,11 @@ namespace Renderer
         std::vector<ProjectedPoint> projected;
         projected.reserve(_vertices.size());
 
-        std::vector<Vertex*> rotated;
-        projected.reserve(_vertices.size());
-
         // FIXME rotate vertex
+
+        std::vector<Vertex> rotated;
+        rotated.reserve(_vertices.size());
+        projected.reserve(_vertices.size());
 
         for (Vertex* v : _vertices)
         {
@@ -39,27 +40,33 @@ namespace Renderer
             worldV.setZ(worldV.getZ() + _z);
 
             projected.push_back(projector.projectPoint(worldV));
-            rotated.push_back(&worldV);
+            rotated.push_back(worldV);
         }
         std::vector<Mesh> sortedMeshes = _meshes;
 
         std::sort(sortedMeshes.begin(), sortedMeshes.end(),
                   [&](Mesh& a, Mesh& b) {
-                      float za = (rotated[a.getVertices()[0]]->getZ()
-                                  + rotated[a.getVertices()[1]]->getZ()
-                                  + rotated[a.getVertices()[2]]->getZ())
+                      float za = (rotated[a.getVertices()[0]].getZ()
+                                  + rotated[a.getVertices()[1]].getZ()
+                                  + rotated[a.getVertices()[2]].getZ())
                           / 3.0f;
 
-                      float zb = (rotated[b.getVertices()[0]]->getZ()
-                                  + rotated[b.getVertices()[1]]->getZ()
-                                  + rotated[b.getVertices()[2]]->getZ())
+                      float zb = (rotated[b.getVertices()[0]].getZ()
+                                  + rotated[b.getVertices()[1]].getZ()
+                                  + rotated[b.getVertices()[2]].getZ())
                           / 3.0f;
 
-                      return za > zb; // back to front (higher Z is farther)
+                      return za > zb;
                   });
 
+        Mesh::closest = Mesh::buffed_closest;
+        Mesh::furthest = Mesh::buffed_furthest;
+
+        Mesh::buffed_closest = 10000;
+        Mesh::buffed_furthest = 0;
+
         for (auto& mesh : sortedMeshes)
-            drawMesh(mesh, projected, renderer, _vertices);
+            drawMesh(mesh, projected, renderer);
     }
 
     std::vector<Vertex*>& Model::getVertices()

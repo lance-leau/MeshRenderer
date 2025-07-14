@@ -10,7 +10,7 @@ namespace Renderer
 {
     Model parseOBJ(const std::string& path)
     {
-        Model model(0, 200, 100); // placeholder position
+        Model model(0, 100, 0); // placeholder position
 
         std::ifstream file(path);
         if (!file.is_open())
@@ -29,29 +29,45 @@ namespace Renderer
             if (prefix == "v")
             {
                 float x, y, z;
+
+                // iss >> x >> y >> z;
+                // float xNew = -y * 10;
+                // float yNew = -z * 10;
+                // float zNew = x * 10;
+
                 iss >> x >> y >> z;
-                float xNew = -y * 10;
-                float yNew = -z * 10;
-                float zNew = x * 10;
+                float xNew = x * 100;
+                float yNew = -y * 100;
+                float zNew = -z * 100;
+
                 vertices.push_back(new Vertex(xNew, yNew, zNew));
             }
             else if (prefix == "f")
             {
-                std::array<int, 3> face;
-                std::string v1, v2, v3;
-                iss >> v1 >> v2 >> v3;
+                std::array<int, 3> face1;
+                std::array<int, 3> face2;
+                std::string v1, v2, v3, v4;
+                iss >> v1 >> v2 >> v3 >> v4;
 
                 auto parseIndex = [](const std::string& token) -> int {
                     size_t pos = token.find('/');
-                    return std::stoi(token.substr(0, pos))
-                        - 1; // OBJ is 1-indexed
+                    return std::stoi(token.substr(0, pos)) - 1;
                 };
 
-                face[0] = parseIndex(v1);
-                face[1] = parseIndex(v2);
-                face[2] = parseIndex(v3);
+                face1[0] = parseIndex(v1);
+                face1[1] = parseIndex(v2);
+                face1[2] = parseIndex(v3);
 
-                faces.push_back(face);
+                faces.push_back(face1);
+
+                if (v4 != "")
+                {
+                    face2[0] = parseIndex(v1);
+                    face2[1] = parseIndex(v3);
+                    face2[2] = parseIndex(v4);
+
+                    faces.push_back(face2);
+                }
             }
         }
 
