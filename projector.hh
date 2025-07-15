@@ -22,9 +22,10 @@ namespace Renderer
     {
     private:
         float _focalLen; // 50 <=_focalLen <= 1000
-        ProjectedPoint _offset;
 
     public:
+        ProjectedPoint _offset;
+
         Projector(float focalLen = 300.0f,
                   ProjectedPoint offset = ProjectedPoint(0.0f, 0.0f, 0.0f));
 

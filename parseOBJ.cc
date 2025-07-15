@@ -10,7 +10,7 @@ namespace Renderer
 {
     Model parseOBJ(const std::string& path)
     {
-        Model model(0, 100, 0); // placeholder position
+        Model model(0, 0, 0); // placeholder position
 
         std::ifstream file(path);
         if (!file.is_open())
@@ -30,7 +30,7 @@ namespace Renderer
             {
                 float x, y, z;
 
-                // cat
+                // // cat
                 // iss >> x >> y >> z;
                 // float xNew = -y * 10;
                 // float yNew = -z * 10;
@@ -83,7 +83,8 @@ namespace Renderer
             model.addVertex(v);
         for (const auto& f : faces)
             // model.addMesh(Mesh(f[0], f[1], f[2], 255, 255, 255, 255));
-            model.addMesh(Mesh(f[0], f[1], f[2], 86, 50, 19, 255)); // brown
+            // model.addMesh(Mesh(f[0], f[1], f[2], 86, 50, 19, 255)); // brown
+            model.addMesh(Mesh(f[0], f[1], f[2], 255, 141, 31, 255)); // orange
 
         return model;
     }

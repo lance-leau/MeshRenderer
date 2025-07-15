@@ -42,7 +42,7 @@ namespace Renderer
         std::vector<Mesh>& getMeshes();
 
         void setPosition(int x, int y, int z);
-        std::tuple<int, int, int> getPosition();
+        std::vector<int> getPosition();
 
         bool _isWireframe;
     };

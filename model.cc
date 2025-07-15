@@ -89,7 +89,7 @@ namespace Renderer
         _z = z;
     }
 
-    std::tuple<int, int, int> Model::getPosition()
+    std::vector<int> Model::getPosition()
     {
         return { _x, _y, _z };
     }

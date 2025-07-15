@@ -15,4 +15,6 @@ namespace Renderer
     void drawMesh(Mesh& mesh, std::vector<ProjectedPoint>& projected,
                   SDL_Renderer* renderer, std::vector<Vertex>& rotatedWorld);
 
+    void clearWithLayeredGradient(SDL_Renderer* renderer, SDL_Window* window);
+
 } // namespace Renderer

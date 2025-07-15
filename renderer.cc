@@ -26,33 +26,6 @@ namespace Renderer
                            projected[indices[0]]._y);
     }
 
-    bool isInsideTriangle(int px, int py, ProjectedPoint& A, ProjectedPoint& B,
-                          ProjectedPoint& C)
-    {
-        int ax = A._x, ay = A._y;
-        int bx = B._x, by = B._y;
-        int cx = C._x, cy = C._y;
-
-        int v0x = cx - ax, v0y = cy - ay;
-        int v1x = bx - ax, v1y = by - ay;
-        int v2x = px - ax, v2y = py - ay;
-
-        int dot00 = v0x * v0x + v0y * v0y;
-        int dot01 = v0x * v1x + v0y * v1y;
-        int dot02 = v0x * v2x + v0y * v2y;
-        int dot11 = v1x * v1x + v1y * v1y;
-        int dot12 = v1x * v2x + v1y * v2y;
-
-        float denom = static_cast<float>(dot00 * dot11 - dot01 * dot01);
-        if (denom == 0.0f)
-            return false; // degenerate
-
-        float u = static_cast<float>(dot11 * dot02 - dot01 * dot12) / denom;
-        float v = static_cast<float>(dot00 * dot12 - dot01 * dot02) / denom;
-
-        return (u >= 0) && (v >= 0) && (u + v <= 1);
-    }
-
     static inline int edgeFunc(int x0, int y0, int x1, int y1, int x, int y)
     {
         return (y0 - y1) * x + (x1 - x0) * y + x0 * y1 - x1 * y0;
@@ -83,7 +56,6 @@ namespace Renderer
         float cosTheta = -nz;
         float diff = (cosTheta > 0.0f ? cosTheta : 0.0f);
 
-        // mix with ambient
         return ambient + (1.0f - ambient) * diff;
     }
 
@@ -140,6 +112,47 @@ namespace Renderer
                 }
             }
         }
+
+        // to overlay the wireframe with the mesh
+        // drawWireframe(mesh, projected, renderer);
     }
 
+    void clearWithLayeredGradient(SDL_Renderer* renderer, SDL_Window* window)
+    {
+        int width, height;
+        SDL_GetWindowSize(window, &width, &height);
+
+        int skyEnd = (2 * height) / 3;
+        int fadeH = height / 40;
+        int fadeEnd = std::min(skyEnd + fadeH, height);
+
+        // #0077FF #A6FBFF #607894
+        const SDL_Color top = { 0x00, 0x77, 0xFF, 255 };
+        const SDL_Color mid = { 0xA6, 0xFB, 0xFF, 255 };
+        const SDL_Color ground = { 0x60, 0x78, 0x94, 255 };
+
+        SDL_SetRenderDrawColor(renderer, ground.r, ground.g, ground.b,
+                               ground.a);
+        SDL_RenderClear(renderer);
+
+        for (int y = 0; y < skyEnd; ++y)
+        {
+            float t = float(y) / float(skyEnd - 1);
+            Uint8 r = Uint8(top.r + t * (mid.r - top.r));
+            Uint8 g = Uint8(top.g + t * (mid.g - top.g));
+            Uint8 b = Uint8(top.b + t * (mid.b - top.b));
+            SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+            SDL_RenderDrawLine(renderer, 0, y, width, y);
+        }
+
+        for (int y = skyEnd; y < fadeEnd; ++y)
+        {
+            float t = float(y - skyEnd) / float((fadeEnd - skyEnd) - 1);
+            Uint8 r = Uint8(mid.r + t * (ground.r - mid.r));
+            Uint8 g = Uint8(mid.g + t * (ground.g - mid.g));
+            Uint8 b = Uint8(mid.b + t * (ground.b - mid.b));
+            SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+            SDL_RenderDrawLine(renderer, 0, y, width, y);
+        }
+    }
 } // namespace Renderer
