@@ -48,7 +48,7 @@ int main()
 
     Projector projector(400, ProjectedPoint(WIDTH / 2.0f, HEIGHT / 2.0f, 0.0f));
 
-    Renderer::Model model = Renderer::parseOBJ("cocorico.obj");
+    Renderer::Model model = Renderer::parseOBJ("chest.obj");
     std::cout << model.getMeshes().size() << "\n";
 
     bool running = true;
