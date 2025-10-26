@@ -1,32 +1,28 @@
-# ==== Makefile for 3D Renderer ====
-
 CXX := g++
-CXXFLAGS := -g -Wall -Wextra -pedantic
+CXXFLAGS := -g -Wall -Wextra -pedantic -std=c++17
 LDFLAGS := -lSDL2
 
-SRC := main.cc mesh.cc model.cc projector.cc renderer.cc vertex.cc parseOBJ.cc
+# Automatically find all source files
+SRC := $(wildcard src/**/*.cc) main.cc
 OBJ := $(SRC:.cc=.o)
 TARGET := main
 
-# Default rule
+# Collect all subdirectories in src/ as include paths
+INCLUDE_DIRS := $(shell find src -type d)
+CXXFLAGS += $(addprefix -I, $(INCLUDE_DIRS))
+
 all: $(TARGET)
 
-# Link
 $(TARGET): $(OBJ)
-	$(CXX) $(CXXFLAGS) $(OBJ) -o $(TARGET) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(OBJ) -o $@ $(LDFLAGS)
 
-# Compile
 %.o: %.cc
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Clean up
 clean:
 	rm -f $(OBJ) $(TARGET)
 
-# Rebuild from scratch
 rebuild: clean all
-
-# Run the program
 run: $(TARGET)
 	./$(TARGET)
 
