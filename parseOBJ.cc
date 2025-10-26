@@ -37,16 +37,16 @@ namespace Renderer
                 // float zNew = x * 10;
 
                 // chest
-                iss >> x >> y >> z;
-                float xNew = x * 0.2f;
-                float yNew = -y * 0.2f;
-                float zNew = -z * 0.2f;
+                // iss >> x >> y >> z;
+                // float xNew = x * 0.2f;
+                // float yNew = -y * 0.2f;
+                // float zNew = -z * 0.2f;
 
                 // // cocorico
-                // iss >> x >> y >> z;
-                // float xNew = x * 100;
-                // float yNew = -y * 100;
-                // float zNew = -z * 100;
+                iss >> x >> y >> z;
+                float xNew = x * 100;
+                float yNew = -y * 100;
+                float zNew = -z * 100;
 
                 vertices.push_back(new Vertex(xNew, yNew, zNew));
             }
@@ -82,8 +82,8 @@ namespace Renderer
         for (Vertex* v : vertices)
             model.addVertex(v);
         for (const auto& f : faces)
-            // model.addMesh(Mesh(f[0], f[1], f[2], 255, 255, 255, 255));
-            model.addMesh(Mesh(f[0], f[1], f[2], 86, 50, 19, 255)); // brown
+            model.addMesh(Mesh(f[0], f[1], f[2], 255, 255, 255, 255));
+        // model.addMesh(Mesh(f[0], f[1], f[2], 86, 50, 19, 255)); // brown
         // model.addMesh(Mesh(f[0], f[1], f[2], 255, 141, 31, 255)); // orange
 
         return model;

@@ -1,0 +1,19 @@
+# Compiled object files
+*.o
+
+# Executables
+main
+main.exe
+
+# 3D models
+*.obj
+
+# Editor and build folders
+.vscode/
+build/
+bin/
+
+# Temporary or system files
+*.log
+*.tmp
+*.cache
